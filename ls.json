@@ -1,0 +1,92 @@
+{
+	"format" : {
+		"files_first" : false,
+		"hide_hidden" : false,
+		"hide_system" : false,
+		"hide_links" : false,
+		"hide_metadata" : false,
+		"compact_sizes" : true,
+		"elide_long_names" : true,
+		"auto_more" : true
+	},
+	"color" : {
+		"scm" : {
+			"D" : {
+				"fore" : "red",
+				"back" : "",
+				"bold" : true
+			},
+			"R" : {
+				"fore" : "yellow",
+				"back" : "",
+				"bold" : false
+			},
+			"A" : {
+				"fore" : "green",
+				"back" : "",
+				"bold" : true
+			},
+			"M" : {
+				"fore" : "cyan",
+				"back" : "",
+				"bold" : true
+			}
+		},
+		"description" : {
+			"fore" : "yellow",
+			"back" : "",
+			"bold" : false
+		},
+		"symlink" : {
+			"fore" : "cyan",
+			"back" : "",
+			"bold" : true
+		},
+		"directories" : {
+			"fore" : "magenta",
+			"back" : "",
+			"bold" : true
+		},
+		"keys" : "c;cpp;h;py;pyc;xml;json;ini",
+		"c" : {
+			"fore" : "yellow",
+			"back" : "",
+			"bold" : true
+		},
+		"cpp" : {
+			"fore" : "yellow",
+			"back" : "",
+			"bold" : true
+		},
+		"h" : {
+			"fore" : "yellow",
+			"back" : "",
+			"bold" : false
+		},
+		"py" : {
+			"fore" : "green",
+			"back" : "",
+			"bold" : true
+		},
+		"pyc" : {
+			"fore" : "green",
+			"back" : "",
+			"bold" : false
+		},
+		"xml" : {
+			"fore" : "white",
+			"back" : "",
+			"bold" : false
+		},
+		"json" : {
+			"fore" : "green",
+			"back" : "",
+			"bold" : true
+		},
+		"ini" : {
+			"fore" : "blue",
+			"back" : "",
+			"bold" : true
+		}
+	}
+}
