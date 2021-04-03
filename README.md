@@ -34,7 +34,7 @@ shared library can be found in the `term/DLL` subfolder.
 
 **ls** has built-in support for detecting the presence of a source-control manager
 for the folder being displayed.  At this time, the three most popular SCMs are
-supported: Suversion, Mercurial and git.  If **ls** detects that the current folder
+supported: Subversion, Mercurial and git.  If **ls** detects that the current folder
 is under SCM control, it will attempt to retrieve the current state of the entries
 within the context of that SCM.
 
