@@ -735,7 +735,7 @@ func main() {
 		}
 
 		p := (float64(partInfo.bytesFree) / float64(partInfo.totalBytes)) * 100.0
-		lPrintLine(fmt.Sprintf("%s free of %s (%.1f%%)", format.Number(partInfo.bytesFree, 20, 2, false, !lsConfigData.compactSizes), format.Number(partInfo.totalBytes, 0, 2, false, !lsConfigData.compactSizes), p))
+		lPrintLine(fmt.Sprintf("%s used of %s (%.1f%%)", format.Number(partInfo.bytesFree, 20, 2, false, !lsConfigData.compactSizes), format.Number(partInfo.totalBytes, 0, 2, false, !lsConfigData.compactSizes), p))
 
 		if key != "." {
 			os.Chdir(cwd)
