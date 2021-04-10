@@ -43,7 +43,7 @@ type partitionInfo struct {
 	numberOfFreeClusters  uint64
 	totalNumberOfClusters uint64
 	totalBytes            uint64
-	bytesFree             uint64
+	bytesInUse            uint64
 }
 
 func getPartInfo(path string) *partitionInfo {
@@ -64,9 +64,9 @@ func getPartInfo(path string) *partitionInfo {
 
 	clusterSize := uint64(sectorsPerCluster * bytesPerSector)
 	totalBytes := uint64(totalNumberOfClusters) * clusterSize
-	bytesFree := totalBytes - uint64(numberOfFreeClusters)*clusterSize
+	bytesInUse := totalBytes - uint64(numberOfFreeClusters)*clusterSize
 
-	partInfo := partitionInfo{uint64(sectorsPerCluster), uint64(bytesPerSector), uint64(numberOfFreeClusters), uint64(totalNumberOfClusters), totalBytes, bytesFree}
+	partInfo := partitionInfo{uint64(sectorsPerCluster), uint64(bytesPerSector), uint64(numberOfFreeClusters), uint64(totalNumberOfClusters), totalBytes, bytesInUse}
 
 	return &partInfo
 }
@@ -734,8 +734,16 @@ func main() {
 			lPrintLine(fmt.Sprintf("%20s0 bytes in 0 files and 0 dirs", " "))
 		}
 
-		p := (float64(partInfo.bytesFree) / float64(partInfo.totalBytes)) * 100.0
-		lPrintLine(fmt.Sprintf("%s used of %s (%.1f%%)", format.Number(partInfo.bytesFree, 20, 2, false, !lsConfigData.compactSizes), format.Number(partInfo.totalBytes, 0, 2, false, !lsConfigData.compactSizes), p))
+		pInUse := (float64(partInfo.bytesInUse) / float64(partInfo.totalBytes)) * 100.0
+		bytesInUse := partInfo.totalBytes - partInfo.bytesInUse
+		pFree := (float64(bytesInUse) / float64(partInfo.totalBytes)) * 100.0
+
+		lPrintLine(fmt.Sprintf("%s total / %s in use (%.1f%%) / %s free (%.1f%%)",
+			format.Number(partInfo.totalBytes, 20, 2, false, !lsConfigData.compactSizes),
+			format.Number(partInfo.bytesInUse, 0, 2, false, !lsConfigData.compactSizes),
+			pInUse,
+			format.Number(bytesInUse, 0, 2, false, !lsConfigData.compactSizes),
+			pFree))
 
 		if key != "." {
 			os.Chdir(cwd)
