@@ -10,6 +10,7 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"unicode"
 	"unsafe"
 
 	"github.com/fatih/color"
@@ -71,25 +72,6 @@ func getPartInfo(path string) *partitionInfo {
 	return &partInfo
 }
 
-// https://stackoverflow.com/questions/14668850/list-directory-in-go
-func readDir(root string) []string {
-	var files []string
-	f, err := os.Open(root)
-	if err != nil {
-		log.Panic(err)
-	}
-	fileInfo, err := f.Readdir(-1)
-	f.Close()
-	if err != nil {
-		log.Panic(err)
-	}
-
-	for _, file := range fileInfo {
-		files = append(files, file.Name())
-	}
-	return files
-}
-
 func resolveReparsePoint(file string) string {
 	fi, err := os.Lstat(file)
 	if err != nil {
@@ -115,7 +97,7 @@ func resolveReparsePoint(file string) string {
 	return target
 }
 
-// smoe attributes aren't defined in syscall, so I"ve had to define them here
+// some attributes aren't defined in syscall, so I've had to define them here
 const FILE_ATTRIBUTE_COMPRESSED uint32 = 2048
 const FILE_ATTRIBUTE_ENCRYPTED uint32 = 16384
 const FILE_ATTRIBUTE_SPARSE_FILE uint32 = 512
@@ -526,6 +508,20 @@ func main() {
 			}
 		}
 	}
+
+	// https://wenzr.wordpress.com/2018/04/09/go-glob-case-insensitive/
+	lConvertToCI := func(line string) string {
+		p := ""
+		for _, r := range line {
+			if unicode.IsLetter(r) {
+				p += fmt.Sprintf("[%c%c]", unicode.ToLower(r), unicode.ToUpper(r))
+			} else {
+				p += string(r)
+			}
+		}
+		return p
+	}
+
 	firstListing := true
 
 	for key, patterns := range tasks {
@@ -557,26 +553,21 @@ func main() {
 		var fileEntries []entryData
 		var dirEntries []entryData
 
-		files := readDir(".")
+		var files []string
+
+		for j := range patterns {
+			ci_pattern := lConvertToCI(patterns[j])
+			f, err := filepath.Glob(ci_pattern)
+			if err != nil {
+				log.Panic(err)
+			}
+			for i := range f {
+				files = append(files, f[i])
+			}
+		}
 
 		// categorize and file each entry
 		for i := range files {
-			matched := false
-			for j := range patterns {
-				succ, err := filepath.Match(patterns[j], files[i])
-				if err != nil {
-					log.Panic(err)
-				}
-				if succ {
-					matched = true
-					break
-				}
-			}
-
-			if !matched {
-				continue
-			}
-
 			entry := processFile(files[i])
 
 			if lsConfigData.hideHidden && entry.stats[2] == 'h' {
